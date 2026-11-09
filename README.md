@@ -1,4 +1,4 @@
-# Warframe Companion
+# Jarvis-002 — Warframe Companion
 
 A personal inventory and progression management application for Warframe players.
 
@@ -13,15 +13,16 @@ This is an independent companion application and is not affiliated with or endor
 - Player Profile
 - Currency Tracking
 - Warframe Collection
-- Relic Collection
+- Relic Tracking
 - Mod Collection
 - Weapon Collection
 - Resource Tracking
-- Foundry Crafting Tracker
+- Foundry Tracking
 
 ## Technology Stack
 
 ### Frontend
+
 - React
 - TypeScript
 - Vite
@@ -29,38 +30,42 @@ This is an independent companion application and is not affiliated with or endor
 - Axios
 
 ### Backend
+
 - Python
 - FastAPI
 - SQLAlchemy
 
 ### Database
+
 - PostgreSQL 17
 - Alembic
 
 ### Development Tools
-- Git
-- GitHub
+
+- Git and GitHub
+- Docker and Docker Compose
 - VS Code
-- Docker
-- Docker Compose
-- pgAdmin
 
 ## Project Structure
 
 ```text
-warframe-companion/
+Jarvis-002/
 ├── frontend/
+│   ├── public/
+│   └── src/
 ├── backend/
-├── .github/
+│   └── app/
+├── .vscode/
 ├── .gitignore
+├── docker-compose.yml
 └── README.md
 ```
 
-The project will be developed progressively, beginning with the frontend.
+The project structure will expand as development progresses.
 
 ## Development Status
 
-**Current Stage:** Project Initialization
+Currently setting up the development environment and frontend foundation.
 
 ## License
 
