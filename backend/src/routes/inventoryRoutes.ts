@@ -5,12 +5,13 @@ import {
   editInventoryItem,
   removeInventoryItem,
 } from "../controllers/inventoryController.js";
+import { csrfSynchronisedProtection } from "../middleware/csrf.js";
 
 const router = Router();
 
 router.get("/", getInventory);
-router.post("/", createInventoryItem);
-router.put("/:id", editInventoryItem);
-router.delete("/:id", removeInventoryItem);
+router.post("/", csrfSynchronisedProtection, createInventoryItem);
+router.put("/:id", csrfSynchronisedProtection, editInventoryItem);
+router.delete("/:id", csrfSynchronisedProtection, removeInventoryItem);
 
 export default router;

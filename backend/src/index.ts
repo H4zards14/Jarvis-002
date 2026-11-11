@@ -1,16 +1,30 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { pool } from "./config/database.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import { sessionMiddleware } from "./middleware/session.js";
+import { requireAuth } from "./middleware/requireAuth.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
-app.use(express.json());
-app.use("/api/inventory", inventoryRoutes);
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
-// Health check
+app.use(express.json({ limit: "10kb" }));
+
+// Initialize PostgreSQL-backed login sessions
+app.use(sessionMiddleware);
+
+app.use("/api/auth", authRoutes);
+app.use("/api/inventory", requireAuth, inventoryRoutes);
+
 app.get("/api/health", (_req, res) => {
   res.status(200).json({
     success: true,
@@ -18,7 +32,6 @@ app.get("/api/health", (_req, res) => {
   });
 });
 
-// Start server after testing PostgreSQL
 async function startServer() {
   try {
     const result = await pool.query("SELECT current_database() AS database");

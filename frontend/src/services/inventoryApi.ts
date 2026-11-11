@@ -1,5 +1,6 @@
 import type { InventoryItem } from "../types/inventory";
 import { saveInventory } from "../utils/localStorage";
+import { getCsrfToken } from "./authApi";
 
 const API_URL = "http://localhost:5000/api/inventory";
 
@@ -26,17 +27,24 @@ async function handleResponse(response: Response) {
 }
 
 export async function getInventory(): Promise<InventoryItem[]> {
-  const response = await fetch(API_URL);
+  const response = await fetch(API_URL, {
+    credentials: "include",
+  });
+
   return handleResponse(response);
 }
 
 export async function addInventory(
   item: NewInventoryItem,
 ): Promise<InventoryItem> {
+  const csrfToken = await getCsrfToken();
+
   const response = await fetch(API_URL, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "x-csrf-token": csrfToken,
     },
     body: JSON.stringify(item),
   });
@@ -48,10 +56,14 @@ export async function updateInventory(
   id: string,
   item: Omit<InventoryItem, "id" | "updatedAt">,
 ): Promise<InventoryItem> {
+  const csrfToken = await getCsrfToken();
+
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "x-csrf-token": csrfToken,
     },
     body: JSON.stringify(item),
   });
@@ -60,8 +72,14 @@ export async function updateInventory(
 }
 
 export async function deleteInventory(id: string): Promise<void> {
+  const csrfToken = await getCsrfToken();
+
   const response = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
+    credentials: "include",
+    headers: {
+      "x-csrf-token": csrfToken,
+    },
   });
 
   await handleResponse(response);
@@ -87,10 +105,8 @@ function matchesOriginalItem(
 export async function migrateLocalInventory(): Promise<InventoryItem[]> {
   const existingState = localStorage.getItem(MIGRATION_STATE_KEY);
 
-  // Get the current database inventory.
   const serverInventory = await getInventory();
 
-  // Migration has already been completed.
   if (
     existingState === null &&
     localStorage.getItem(MIGRATION_COMPLETE_KEY) === "true"
@@ -98,16 +114,13 @@ export async function migrateLocalInventory(): Promise<InventoryItem[]> {
     return serverInventory;
   }
 
-  // Read the original browser inventory.
   const localData = localStorage.getItem(STORAGE_KEY);
 
-  // No browser inventory exists. Use the database as the source.
   if (existingState === null && localData === null) {
     localStorage.setItem(MIGRATION_COMPLETE_KEY, "true");
     return serverInventory;
   }
 
-  // No migration snapshot exists yet.
   if (existingState === null) {
     let originalItems: InventoryItem[];
 
@@ -125,7 +138,6 @@ export async function migrateLocalInventory(): Promise<InventoryItem[]> {
       );
     }
 
-    // If the database already has records, compare them first.
     if (serverInventory.length > 0) {
       const inventoriesMatch =
         serverInventory.length === originalItems.length &&
@@ -146,12 +158,10 @@ export async function migrateLocalInventory(): Promise<InventoryItem[]> {
         );
       }
 
-      // Preserve the original browser data before synchronizing.
       if (localStorage.getItem(BACKUP_KEY) === null) {
         localStorage.setItem(BACKUP_KEY, localData!);
       }
 
-      // Both inventories match. No import is necessary.
       saveInventory(serverInventory);
 
       localStorage.setItem(MIGRATION_COMPLETE_KEY, "true");
@@ -159,18 +169,15 @@ export async function migrateLocalInventory(): Promise<InventoryItem[]> {
       return serverInventory;
     }
 
-    // Database is empty. Preserve the original browser inventory.
     localStorage.setItem(BACKUP_KEY, localData!);
 
     const state: MigrationState = {
       items: originalItems,
     };
 
-    // Save a migration snapshot before importing anything.
     localStorage.setItem(MIGRATION_STATE_KEY, JSON.stringify(state));
   }
 
-  // Read the saved migration snapshot.
   const savedState = localStorage.getItem(MIGRATION_STATE_KEY);
 
   if (savedState === null) {
@@ -191,8 +198,6 @@ export async function migrateLocalInventory(): Promise<InventoryItem[]> {
     );
   }
 
-  // Import each item using its original ID.
-  // The backend safely handles repeated IDs.
   for (const item of migration.items) {
     await addInventory({
       id: item.id,
@@ -207,7 +212,6 @@ export async function migrateLocalInventory(): Promise<InventoryItem[]> {
     });
   }
 
-  // Fetch the database again to verify the import.
   const finalInventory = await getInventory();
 
   for (const originalItem of migration.items) {
@@ -222,7 +226,6 @@ export async function migrateLocalInventory(): Promise<InventoryItem[]> {
     }
   }
 
-  // Synchronize browser storage only after successful verification.
   saveInventory(finalInventory);
 
   localStorage.setItem(MIGRATION_COMPLETE_KEY, "true");

@@ -5,6 +5,7 @@ import ModsPage from "./pages/ModsPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import WeaponsPage from "./pages/WeaponsPage";
 import RelicsPage from "./pages/RelicsPage";
+import { useAuth } from "./context/useAuth";
 import "./App.css";
 
 const navigation = [
@@ -32,6 +33,23 @@ const collections = [
 
 function App() {
   const [activePage, setActivePage] = useState("Command Center");
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
+
+  const { user, logout } = useAuth();
+
+  async function handleLogout() {
+    try {
+      setLoggingOut(true);
+      setLogoutError("");
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+      setLogoutError("Unable to log out. Please try again.");
+    } finally {
+      setLoggingOut(false);
+    }
+  }
 
   return (
     <div className="app-shell">
@@ -82,9 +100,24 @@ function App() {
               <span className="status-dot" />
               ALL SYSTEMS NORMAL
             </span>
-            <div className="avatar">T</div>
+
+            <div className="avatar">
+              {user.username.charAt(0).toUpperCase()}
+            </div>
+
+            <span className="operator-name">{user.username}</span>
+
+            <button
+              className="text-button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+            >
+              {loggingOut ? "LOGGING OUT..." : "LOG OUT"}
+            </button>
           </div>
         </header>
+
+        {logoutError && <div className="login-error">{logoutError}</div>}
 
         <div className="dashboard">
           <section className="welcome-section">
@@ -96,10 +129,11 @@ function App() {
                   : activePage.toUpperCase()}
               </h2>
               <p>
-                Welcome back, Tenno. Your journey through the Origin System
-                continues.
+                Welcome back, {user.username}. Your journey through the Origin
+                System continues.
               </p>
             </div>
+
             <div className="date-display">
               <span>OPERATOR STATUS</span>
               <strong>● ACTIVE</strong>
@@ -117,7 +151,7 @@ function App() {
 
                 <div className="profile-info">
                   <span className="eyebrow">REGISTERED TENNO</span>
-                  <h3>YOUR OPERATOR</h3>
+                  <h3>{user.username.toUpperCase()}</h3>
                   <p>Ready for the next mission.</p>
                   <div className="mastery">
                     <span>MASTERY RANK</span>
@@ -156,6 +190,7 @@ function App() {
                       <span className="eyebrow">ARSENAL DATABASE</span>
                       <h3>COLLECTION OVERVIEW</h3>
                     </div>
+
                     <button
                       className="text-button"
                       onClick={() => setActivePage("Inventory")}
@@ -199,6 +234,7 @@ function App() {
                         <small>JUST NOW</small>
                       </div>
                     </div>
+
                     <div className="activity-item">
                       <span className="activity-icon">✧</span>
                       <div>
@@ -207,6 +243,7 @@ function App() {
                         <small>SYSTEM EVENT</small>
                       </div>
                     </div>
+
                     <div className="activity-item">
                       <span className="activity-icon">⌁</span>
                       <div>
