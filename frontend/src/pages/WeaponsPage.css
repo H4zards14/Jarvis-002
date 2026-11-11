@@ -1,0 +1,134 @@
+.weapons-page {
+  padding: 25px;
+  color: #edf6ff;
+}
+
+.weapons-page h2 {
+  color: #edf6ff;
+  font-size: 28px;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+.weapons-page > input {
+  width: 100%;
+  max-width: 450px;
+  padding: 13px 16px;
+  margin-bottom: 25px;
+  background: #101d2d;
+  border: 1px solid rgba(80, 170, 220, 0.25);
+  border-radius: 8px;
+  color: #edf6ff;
+  outline: none;
+}
+
+.weapons-page > input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+.weapons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.weapon-card {
+  background: linear-gradient(145deg, #111e30, #0a1220);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.12);
+  transition: all 0.25s ease;
+}
+
+.weapon-card:hover {
+  transform: translateY(-4px);
+  border-color: #38bdf8;
+  box-shadow:
+    0 0 10px rgba(56, 189, 248, 0.35),
+    0 0 20px rgba(56, 189, 248, 0.2);
+}
+
+.weapon-card h3 {
+  color: #38bdf8;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.weapon-card p {
+  color: #a9bdd2;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.weapon-image {
+  display: block;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin: 15px auto;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.2));
+}
+
+@media (max-width: 600px) {
+  .weapons-page {
+    padding: 15px;
+  }
+
+  .weapons-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.weapon-card button {
+  width: 100%;
+  padding: 11px;
+  margin-top: 12px;
+  background: linear-gradient(135deg, #0284c7, #0ea5e9);
+  border: 1px solid #38bdf8;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.weapon-card button:hover {
+  background: #0e7490;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+  transform: translateY(-2px);
+}
+/* Catalog Notification */
+.catalog-notification {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  background: linear-gradient(145deg, #102b36, #0a1e2b);
+  border: 1px solid #38bdf8;
+  border-radius: 8px;
+  color: #e0f2fe;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.18);
+}
+
+.catalog-notification span {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.catalog-notification button {
+  background: transparent;
+  border: none;
+  color: #38bdf8;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.catalog-notification button:hover {
+  color: #ffffff;
+}

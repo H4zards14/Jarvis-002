@@ -4,20 +4,36 @@ A personal inventory and progression management application for Warframe players
 
 ## About
 
-Warframe Companion helps players organize their in-game collections, track inventory, and monitor their progression.
+Jarvis-002 is an independent Warframe companion application designed to help players organize their collections, manage inventory, and track their in-game progression.
 
-This is an independent companion application and is not affiliated with or endorsed by Digital Extremes.
+This project is not affiliated with or endorsed by Digital Extremes.
 
-## Planned Features
+## Features
+
+### Inventory Management
+
+- Add inventory items
+- Edit existing items
+- Delete inventory items
+- Track quantities and item levels
+- Track mastery and Forma
+- Add personal notes
+- Persistent PostgreSQL storage
+
+### Collection Catalogs
+
+- Warframes
+- Weapons
+- Mods
+- Relics
+- Resources
+
+### Additional Planned Features
 
 - Player Profile
 - Currency Tracking
-- Warframe Collection
-- Relic Tracking
-- Mod Collection
-- Weapon Collection
-- Resource Tracking
 - Foundry Tracking
+- Additional progression tracking
 
 ## Technology Stack
 
@@ -26,25 +42,24 @@ This is an independent companion application and is not affiliated with or endor
 - React
 - TypeScript
 - Vite
-- Tailwind CSS
-- Axios
+- CSS
 
 ### Backend
 
-- Python
-- FastAPI
-- SQLAlchemy
+- Node.js
+- Express
+- TypeScript
+- PostgreSQL client (`pg`)
 
 ### Database
 
-- PostgreSQL 17
-- Alembic
+- PostgreSQL 18
 
 ### Development Tools
 
 - Git and GitHub
-- Docker and Docker Compose
-- VS Code
+- Visual Studio Code
+- pgAdmin 4
 
 ## Project Structure
 
@@ -53,19 +68,112 @@ Jarvis-002/
 ├── frontend/
 │   ├── public/
 │   └── src/
+│       ├── context/
+│       ├── data/
+│       ├── pages/
+│       ├── services/
+│       ├── types/
+│       └── utils/
 ├── backend/
-│   └── app/
-├── .vscode/
+│   └── src/
+│       ├── config/
+│       ├── controllers/
+│       ├── routes/
+│       ├── services/
+│       └── index.ts
 ├── .gitignore
-├── docker-compose.yml
 └── README.md
 ```
 
-The project structure will expand as development progresses.
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm
+- PostgreSQL
+- Git
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/H4zards14/Jarvis-002.git
+cd Jarvis-002
+```
+
+### 2. Configure the Database
+
+Create a PostgreSQL database named:
+
+```text
+Jarvis002
+```
+
+Configure the backend environment variables in `backend/.env` using the settings expected by the backend database configuration.
+
+Never commit your actual `.env` file or database credentials.
+
+### 3. Start the Backend
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+The backend API runs on:
+
+```text
+http://localhost:5000
+```
+
+### 4. Start the Frontend
+
+Open another terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open the local Vite URL displayed in your terminal, normally:
+
+```text
+http://localhost:5173
+```
+
+## Build Verification
+
+Frontend production build:
+
+```bash
+cd frontend
+npm run build
+```
+
+Backend TypeScript build:
+
+```bash
+cd backend
+npm run build
+```
 
 ## Development Status
 
-Currently setting up the development environment and frontend foundation.
+**Current Status: Frontend and Core Backend Completed**
+
+- React frontend implemented
+- Inventory management interface completed
+- Warframe collection catalog integrated
+- Mods, weapons, relics, and resources pages implemented
+- Express REST API implemented
+- PostgreSQL database integration completed
+- Inventory CRUD operations implemented
+- Local inventory migration implemented
+- Frontend and backend production builds verified
+- End-to-end inventory testing completed
+
+Additional features and improvements are planned.
 
 ## License
 
