@@ -1,6 +1,6 @@
 import type { InventoryItem } from "../types/inventory";
 import { saveInventory } from "../utils/localStorage";
-import { getCsrfToken } from "./authApi";
+import { getCsrfToken } from "../../../services/authApi";
 
 const API_URL = "http://localhost:5000/api/inventory";
 

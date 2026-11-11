@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMods } from "../services/modService";
 import type { Mod } from "../services/modService";
-import { useInventory } from "../context/InventoryContext";
+import { useInventory } from "../../inventory/context/InventoryContext";
 import "./ModsPage.css";
 
 function ModsPage() {

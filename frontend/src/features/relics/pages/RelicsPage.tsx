@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getRelics } from "../services/relicService";
 import type { Relic } from "../services/relicService";
-import { useInventory } from "../context/InventoryContext";
+import { useInventory } from "../../inventory/context/InventoryContext";
 import "./RelicsPage.css";
 
 function RelicsPage() {

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { login } from "../services/authApi";
-import type { AuthUser } from "../services/authApi";
+import { login } from "../../../services/authApi";
+import type { AuthUser } from "../../../services/authApi";
 import "./LoginPage.css";
 
 interface LoginPageProps {

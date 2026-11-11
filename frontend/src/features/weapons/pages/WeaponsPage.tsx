@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getWeapons } from "../services/weaponService";
 import type { Weapon } from "../services/weaponService";
-import { useInventory } from "../context/InventoryContext";
+import { useInventory } from "../../inventory/context/InventoryContext";
 import "./WeaponsPage.css";
 
 function WeaponsPage() {

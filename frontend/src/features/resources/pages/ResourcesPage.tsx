@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getResources } from "../services/resourceService";
 import type { Resource } from "../services/resourceService";
-import { useInventory } from "../context/InventoryContext";
+import { useInventory } from "../../inventory/context/InventoryContext";
 import "./ResourcesPage.css";
 
 function ResourcesPage() {

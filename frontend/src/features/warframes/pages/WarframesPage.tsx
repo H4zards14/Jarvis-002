@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getWarframes } from "../services/warframeService";
 import type { Warframe } from "../services/warframeService";
-import { useInventory } from "../context/InventoryContext";
+import { useInventory } from "../../inventory/context/InventoryContext";
 import "./WarframesPage.css";
 
 function WarframesPage() {

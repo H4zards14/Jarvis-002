@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { getCurrentUser, logout as logoutApi } from "../services/authApi";
 import type { AuthUser } from "../services/authApi";
-import LoginPage from "../pages/LoginPage";
-import { InventoryProvider } from "./InventoryContext";
+import LoginPage from "../features/auth/pages/LoginPage";
+import { InventoryProvider } from "../features/inventory/context/InventoryContext";
 import { AuthContext } from "./AuthContext";
 
 interface AuthProviderProps {
