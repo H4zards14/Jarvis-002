@@ -48,6 +48,7 @@ function ModsPage() {
         quantity: 1,
         level: 0,
         mastered: false,
+        isFavorite: false,
         forma: 0,
         notes: "",
       });

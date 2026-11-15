@@ -12,6 +12,7 @@ function InventoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedMastery, setSelectedMastery] = useState("All");
+  const [selectedFavorite, setSelectedFavorite] = useState("All");
   const [sortOrder, setSortOrder] = useState("Default");
 
   const updateInventoryItem = async (updatedItem: InventoryItem) => {
@@ -20,6 +21,17 @@ function InventoryPage() {
       setEditingItem(null);
     } catch (err) {
       console.error("Failed to update inventory item:", err);
+    }
+  };
+
+  const toggleFavorite = async (item: InventoryItem) => {
+    try {
+      await updateItem({
+        ...item,
+        isFavorite: !item.isFavorite,
+      });
+    } catch (err) {
+      console.error("Failed to update favorite status:", err);
     }
   };
 
@@ -51,7 +63,13 @@ function InventoryPage() {
       selectedMastery === "All" ||
       (selectedMastery === "Mastered" ? item.mastered : !item.mastered);
 
-    return matchesSearch && matchesCategory && matchesMastery;
+    const matchesFavorite =
+      selectedFavorite === "All" ||
+      (selectedFavorite === "Favorites" ? item.isFavorite : !item.isFavorite);
+
+    return (
+      matchesSearch && matchesCategory && matchesMastery && matchesFavorite
+    );
   });
 
   const sortedInventory = [...filteredInventory].sort((a, b) => {
@@ -197,6 +215,7 @@ function InventoryPage() {
             setSearchTerm("");
             setSelectedCategory("All");
             setSelectedMastery("All");
+            setSelectedFavorite("All");
             setSortOrder("Default");
           }}
         >
@@ -204,15 +223,27 @@ function InventoryPage() {
         </button>
       </div>
 
-      <select
-        className="inventory-category-filter"
-        value={selectedMastery}
-        onChange={(event) => setSelectedMastery(event.target.value)}
-      >
-        <option value="All">ALL MASTERY STATUS</option>
-        <option value="Mastered">MASTERED</option>
-        <option value="Not Mastered">NOT MASTERED</option>
-      </select>
+      <div className="inventory-filter-row">
+        <select
+          className="inventory-category-filter"
+          value={selectedMastery}
+          onChange={(event) => setSelectedMastery(event.target.value)}
+        >
+          <option value="All">ALL MASTERY STATUS</option>
+          <option value="Mastered">MASTERED</option>
+          <option value="Not Mastered">NOT MASTERED</option>
+        </select>
+
+        <select
+          className="inventory-category-filter"
+          value={selectedFavorite}
+          onChange={(event) => setSelectedFavorite(event.target.value)}
+        >
+          <option value="All">ALL FAVORITE STATUS</option>
+          <option value="Favorites">FAVORITES ONLY</option>
+          <option value="Not Favorites">NON-FAVORITES</option>
+        </select>
+      </div>
 
       <p className="inventory-result-count">
         SHOWING {filteredInventory.length} OF {inventory.length} ITEMS
@@ -237,6 +268,30 @@ function InventoryPage() {
               <span className="inventory-symbol">◈</span>
               <span className="inventory-category">{item.category}</span>
             </div>
+
+            <button
+              type="button"
+              onClick={() => toggleFavorite(item)}
+              aria-label={
+                item.isFavorite
+                  ? `Remove ${item.name} from favorites`
+                  : `Add ${item.name} to favorites`
+              }
+              aria-pressed={item.isFavorite}
+              title={
+                item.isFavorite ? "Remove from favorites" : "Add to favorites"
+              }
+              style={{
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "24px",
+                color: item.isFavorite ? "#facc15" : "#888888",
+                padding: "4px 8px",
+              }}
+            >
+              {item.isFavorite ? "★" : "☆"}
+            </button>
 
             <h3>{item.name}</h3>
 

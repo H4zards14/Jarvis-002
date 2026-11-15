@@ -26,6 +26,7 @@ function AddInventoryItem({ onAdd }: AddInventoryItemProps) {
       quantity,
       level,
       mastered,
+      isFavorite: false,
       forma,
       notes,
       updatedAt: new Date().toISOString(),

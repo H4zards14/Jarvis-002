@@ -8,6 +8,7 @@ export interface InventoryItem {
   quantity: number;
   level: number;
   mastered: boolean;
+  isFavorite: boolean;
   forma: number;
   notes: string;
   updatedAt: string;
@@ -21,6 +22,7 @@ interface InventoryRow {
   quantity: number;
   level: number;
   mastered: boolean;
+  is_favorite: boolean;
   forma: number;
   notes: string | null;
   updated_at: Date;
@@ -39,6 +41,7 @@ function formatItem(row: InventoryRow): InventoryItem {
     quantity: row.quantity,
     level: row.level,
     mastered: row.mastered,
+    isFavorite: row.is_favorite,
     forma: row.forma,
     notes: row.notes ?? "",
     updatedAt: row.updated_at.toISOString(),
@@ -58,9 +61,9 @@ export async function addInventoryItem(
 ): Promise<InventoryItem> {
   const result = await pool.query(
     `INSERT INTO inventory_items
-      (id, name, image, category, quantity, level, mastered, forma, notes)
+      (id, name, image, category, quantity, level, mastered, is_favorite, forma, notes)
      VALUES
-      (COALESCE($1::uuid, gen_random_uuid()), $2, $3, $4, $5, $6, $7, $8, $9)
+      (COALESCE($1::uuid, gen_random_uuid()), $2, $3, $4, $5, $6, $7, $8, $9, $10)
      ON CONFLICT (id) DO NOTHING
      RETURNING *`,
     [
@@ -71,6 +74,7 @@ export async function addInventoryItem(
       item.quantity,
       item.level,
       item.mastered,
+      item.isFavorite ?? false,
       item.forma,
       item.notes,
     ],
@@ -114,10 +118,11 @@ export async function updateInventoryItem(
          quantity = $4,
          level = $5,
          mastered = $6,
-         forma = $7,
-         notes = $8,
+         is_favorite = $7,
+         forma = $8,
+         notes = $9,
          updated_at = CURRENT_TIMESTAMP
-     WHERE id = $9
+     WHERE id = $10
      RETURNING *`,
     [
       item.name,
@@ -126,6 +131,7 @@ export async function updateInventoryItem(
       item.quantity,
       item.level,
       item.mastered,
+      item.isFavorite,
       item.forma,
       item.notes,
       id,
