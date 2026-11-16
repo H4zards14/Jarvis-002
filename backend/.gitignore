@@ -1,3 +1,36 @@
-node_modules/
-dist/
+
+# Environment variables and secrets
 .env
+.env.*
+!.env.example
+
+# Python virtual environments
+.venv/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Type checking and linting
+.mypy_cache/
+.ruff_cache/
+
+# Build and package files
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+
+# IDE
+.idea/

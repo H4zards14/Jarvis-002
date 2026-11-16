@@ -60,6 +60,7 @@ export function InventoryProvider({ children }: InventoryProviderProps) {
       quantity: item.quantity,
       level: item.level,
       mastered: item.mastered,
+      isFavorite: item.isFavorite,
       forma: item.forma,
       notes: item.notes,
     });

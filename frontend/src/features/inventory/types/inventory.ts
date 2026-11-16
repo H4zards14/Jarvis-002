@@ -17,6 +17,7 @@ export interface InventoryItem {
   quantity: number;
   level: number;
   mastered: boolean;
+  isFavorite: boolean;
   forma: number;
   notes: string;
   updatedAt: string;

@@ -97,6 +97,7 @@ function matchesOriginalItem(
     original.quantity === saved.quantity &&
     original.level === saved.level &&
     original.mastered === saved.mastered &&
+    original.isFavorite === saved.isFavorite &&
     original.forma === saved.forma &&
     (original.notes ?? "") === (saved.notes ?? "")
   );
@@ -137,6 +138,12 @@ export async function migrateLocalInventory(): Promise<InventoryItem[]> {
         "Could not safely read your original inventory. Your saved data has not been changed.",
       );
     }
+
+    // Older saved items may not have the favorite property yet.
+    originalItems = originalItems.map((item) => ({
+      ...item,
+      isFavorite: item.isFavorite ?? false,
+    }));
 
     if (serverInventory.length > 0) {
       const inventoriesMatch =
@@ -192,6 +199,11 @@ export async function migrateLocalInventory(): Promise<InventoryItem[]> {
     if (!Array.isArray(migration.items)) {
       throw new Error("Invalid migration snapshot.");
     }
+
+    migration.items = migration.items.map((item) => ({
+      ...item,
+      isFavorite: item.isFavorite ?? false,
+    }));
   } catch {
     throw new Error(
       "Migration snapshot is invalid. Original inventory backup is preserved.",
@@ -207,6 +219,7 @@ export async function migrateLocalInventory(): Promise<InventoryItem[]> {
       quantity: item.quantity,
       level: item.level,
       mastered: item.mastered,
+      isFavorite: item.isFavorite,
       forma: item.forma,
       notes: item.notes,
     });
