@@ -14,7 +14,7 @@ dependencies = [
     "psycopg[binary]>=3.2,<4.0",
     "alembic>=1.14,<2.0",
     "pydantic-settings>=2.7,<3.0",
-    "pwdlib[argon2]>=0.2,<1.0",
+    "pwdlib[bcrypt,argon2]>=0.2,<1.0",
     "python-jose[cryptography]>=3.3,<4.0",
     "python-multipart>=0.0.20,<1.0",
 ]
@@ -38,3 +38,5 @@ target-version = "py313"
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
 ignore = ["UP042"]
+[tool.setuptools.packages.find]
+include = ["app*"]
