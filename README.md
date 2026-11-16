@@ -18,6 +18,8 @@ This project is not affiliated with or endorsed by Digital Extremes.
 - Track quantities and item levels
 - Track mastery and Forma
 - Add personal notes
+- Mark items as favorites
+- Filter favorite inventory items
 - Persistent PostgreSQL storage
 
 ### Collection Catalogs
@@ -27,6 +29,13 @@ This project is not affiliated with or endorsed by Digital Extremes.
 - Mods
 - Relics
 - Resources
+
+### Authentication
+
+- User login and session management
+- Persistent authentication sessions
+- CSRF protection
+- Password hashing
 
 ### Additional Planned Features
 
@@ -46,41 +55,66 @@ This project is not affiliated with or endorsed by Digital Extremes.
 
 ### Backend
 
-- Node.js
-- Express
-- TypeScript
-- PostgreSQL client (`pg`)
+- Python 3.13
+- FastAPI
+- SQLAlchemy
+- Pydantic
+- Alembic
+- Uvicorn
 
 ### Database
 
 - PostgreSQL 18
+
+### Deployment
+
+- Docker
+- Docker Compose
+- Nginx
 
 ### Development Tools
 
 - Git and GitHub
 - Visual Studio Code
 - pgAdmin 4
+- pytest
+- Ruff
 
 ## Project Structure
 
 ```text
 Jarvis-002/
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── v1/
+│   │   ├── core/
+│   │   ├── modules/
+│   │   │   ├── auth/
+│   │   │   ├── inventory/
+│   │   │   └── users/
+│   │   └── main.py
+│   ├── migrations/
+│   ├── tests/
+│   │   └── modules/
+│   ├── .dockerignore
+│   ├── .env.example
+│   ├── Dockerfile
+│   ├── alembic.ini
+│   └── pyproject.toml
 ├── frontend/
 │   ├── public/
-│   └── src/
-│       ├── context/
-│       ├── data/
-│       ├── pages/
-│       ├── services/
-│       ├── types/
-│       └── utils/
-├── backend/
-│   └── src/
-│       ├── config/
-│       ├── controllers/
-│       ├── routes/
-│       ├── services/
-│       └── index.ts
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── features/
+│   │   ├── services/
+│   │   ├── types/
+│   │   └── utils/
+│   ├── .dockerignore
+│   ├── Dockerfile
+│   └── nginx.conf
+├── docker-compose.yml
 ├── .gitignore
 └── README.md
 ```
@@ -89,9 +123,12 @@ Jarvis-002/
 
 ### Prerequisites
 
-- Node.js and npm
-- PostgreSQL
 - Git
+- Docker Desktop with Docker Compose
+- PostgreSQL 18
+- An existing PostgreSQL database named `Jarvis002`
+
+The application uses the existing PostgreSQL database. Docker Compose does not create a separate PostgreSQL container.
 
 ### 1. Clone the Repository
 
@@ -100,35 +137,80 @@ git clone https://github.com/H4zards14/Jarvis-002.git
 cd Jarvis-002
 ```
 
-### 2. Configure the Database
+### 2. Configure Environment Variables
 
-Create a PostgreSQL database named:
+Create the backend environment file using the example:
 
-```text
-Jarvis002
+```bash
+cp backend/.env.example backend/.env
 ```
 
-Configure the backend environment variables in `backend/.env` using the settings expected by the backend database configuration.
+Edit `backend/.env` and configure the required database credentials and application secrets.
 
-Never commit your actual `.env` file or database credentials.
+Never commit your actual `.env` file or expose database credentials and secret keys.
 
-### 3. Start the Backend
+### 3. Start the Application with Docker
+
+From the project root, run:
+
+```bash
+docker compose up -d --build
+```
+
+Check the running containers:
+
+```bash
+docker compose ps
+```
+
+The application will be available at:
+
+| Service           | URL                          |
+| ----------------- | ---------------------------- |
+| Frontend          | http://localhost:5173        |
+| Backend API       | http://localhost:5000        |
+| API documentation | http://localhost:5000/docs   |
+| Health check      | http://localhost:5000/health |
+
+### 4. Stop the Application
+
+```bash
+docker compose down
+```
+
+This stops and removes the application containers. It does not remove the existing PostgreSQL database.
+
+## Local Development
+
+Docker is the recommended way to run the complete application. For development without Docker, run the backend and frontend separately.
+
+### Backend
+
+Requirements:
+
+- Python 3.13
+- PostgreSQL 18
+
+From the project root:
 
 ```bash
 cd backend
-npm install
-npm run dev
+python -m venv .venv
+source .venv/Scripts/activate
+pip install -e .
 ```
 
-The backend API runs on:
+Configure `backend/.env` with the local PostgreSQL connection settings.
 
-```text
-http://localhost:5000
+Start the API:
+
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 5000
 ```
 
-### 4. Start the Frontend
+### Frontend
 
-Open another terminal:
+Open a second terminal:
 
 ```bash
 cd frontend
@@ -136,42 +218,68 @@ npm install
 npm run dev
 ```
 
-Open the local Vite URL displayed in your terminal, normally:
+Open:
 
 ```text
 http://localhost:5173
 ```
 
-## Build Verification
+## Testing and Code Quality
 
-Frontend production build:
+### Backend Tests
+
+From the `backend/` directory:
 
 ```bash
-cd frontend
+pytest
+```
+
+### Backend Linting
+
+```bash
+ruff check app tests
+```
+
+### Frontend Build
+
+From the `frontend/` directory:
+
+```bash
 npm run build
 ```
 
-Backend TypeScript build:
+### Frontend Linting
 
 ```bash
-cd backend
-npm run build
+npm run lint
 ```
+
+## Database and Migrations
+
+Jarvis-002 uses PostgreSQL with SQLAlchemy models and Alembic migrations.
+
+The existing database is preserved during the backend rebuild. The production database migration history was baselined without recreating or deleting existing application data.
+
+Do not run destructive database commands against the production database.
 
 ## Development Status
 
-**Current Status: Frontend and Core Backend Completed**
+**Current Status: FastAPI Backend Rebuild and Docker Deployment Completed**
 
-- React frontend implemented
-- Inventory management interface completed
-- Warframe collection catalog integrated
-- Mods, weapons, relics, and resources pages implemented
-- Express REST API implemented
-- PostgreSQL database integration completed
+- React frontend preserved
+- FastAPI backend implemented
+- Modular backend architecture established
+- PostgreSQL integration completed
+- Authentication and session management implemented
+- CSRF protection implemented
 - Inventory CRUD operations implemented
-- Local inventory migration implemented
-- Frontend and backend production builds verified
-- End-to-end inventory testing completed
+- Favorite inventory functionality integrated
+- Alembic migration configuration established
+- Backend automated tests implemented
+- Docker deployment configured for frontend and backend
+- Frontend and backend integration verified
+- Docker deployment verified
+- GitHub feature branch merged into `main`
 
 Additional features and improvements are planned.
 
