@@ -286,3 +286,7 @@ Additional features and improvements are planned.
 ## License
 
 To be determined.
+
+## Git Workflow Practice
+
+This section is for practicing feature branches, commits, and pull requests.
